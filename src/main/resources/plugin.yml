@@ -1,0 +1,29 @@
+name: BetterTP
+version: ${project.version}
+main: net.DeltaWings.Minecraft.BetterTP.Main
+prefix: BetterTP
+authors: [Aviortheking, LePhoenixArdent, Aipsyllone]
+description: The best teleportation plugin
+website: https://delta-wings.net
+commands:
+  spawn:
+    description: Teleport to the spawn
+    usage: Usage /spawn
+  lobby:
+    description: Teleport to the lobby
+    usage: Usage /lobby
+  bettertp:
+    description: Manage the plugin
+    usage: Usage /bettertp help
+    aliases: [btp,bt]
+  home:
+    description: Teleport to your homes
+    usage: Usage /home [home]
+  sethome:
+    description: Set your homes
+    usage: Usage /sethome [home]
+    aliases: [shome]
+  delhome:
+    description: Delete your homes
+    usage: Usage /delhome [home]
+    aliases: [dhome]
