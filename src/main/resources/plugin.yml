@@ -27,3 +27,7 @@ commands:
     description: Delete your homes
     usage: Usage /delhome [home]
     aliases: [dhome]
+  homelist:
+    description: List your homes
+    usage: Usage /homelist
+    aliases: [hlist]

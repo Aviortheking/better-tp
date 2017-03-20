@@ -10,10 +10,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Spawn implements CommandExecutor {
-	Config m = new Config("", "messages");
+	private Config m = new Config("", "messages");
 
 	@Override
-	public boolean onCommand(CommandSender s, Command abdoulila, String l, String[] a) {
+	public boolean onCommand(CommandSender s, Command d, String l, String[] a) {
 		if(s instanceof Player) {
 			if(s.hasPermission("bettertp.spawn")) {
 				Config c = new Config("data/spawn", "config");
@@ -23,11 +23,19 @@ public class Spawn implements CommandExecutor {
 						String[] sl = new String[2];
 						sl[0] = "spawn";
 						Main.getInstance().tp(sl, (Player) s );
+						return true;
 					}
+				} else {
+					s.sendMessage(m.getString("spawn.not-set").replace("&", "§"));
+					return true;
 				}
-			} else s.sendMessage(m.getString("global.permission"));
+			} else {
+				s.sendMessage(m.getString("global.permission").replace("&", "§"));
+				return true;
+			}
 		} else {
 			s.sendMessage(m.getString("global.not-console"));
+			return true;
 		}
 		return false;
 	}
