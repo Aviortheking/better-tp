@@ -2,14 +2,12 @@ package net.DeltaWings.Minecraft.BetterTP.Commands;
 
 import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
 import net.DeltaWings.Minecraft.BetterTP.Main;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Delta Wings on 19/03/2017 at.01:37
- */
 public class Home implements CommandExecutor {
 	private Config m = new Config("", "messages");
 

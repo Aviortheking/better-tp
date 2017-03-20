@@ -1,18 +1,16 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
 import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
+
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Delta Wings on 19/03/2017 at.01:40
- */
 public class Bettertp implements CommandExecutor {
 
-	Config m = new Config("", "messages");
+	private Config m = new Config("", "messages");
 
 	@Override
 	public boolean onCommand(CommandSender s, Command d, String g, String[] a) {

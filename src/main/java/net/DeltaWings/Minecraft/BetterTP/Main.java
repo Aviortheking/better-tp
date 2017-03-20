@@ -72,11 +72,17 @@ public final class Main extends JavaPlugin {
 			messages.set("home.deleted", "&8 >&c Your home [home] has been deleted");
 			messages.set("home.dont-exist", "&8 >&c Your home [home] do not exist");
 			messages.set("home.teleported", "&8 >&c You have been teleported to your home  : [home]");
+			messages.set("home.max", "&8 >&c You already have [max] homes");
 			messages.set("help.top", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2BetterTP &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
 			messages.set("help.bottom", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2BetterTP &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
 			messages.save();
 		}
 
-
+		Config c = new Config("", "config");
+		if(!c.exist()) {
+			c.create();
+			c.set("maxhomes");
+			c.save();
+		}
 	}
 }
