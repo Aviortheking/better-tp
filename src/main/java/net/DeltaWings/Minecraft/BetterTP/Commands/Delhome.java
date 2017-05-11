@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Delhome implements CommandExecutor {
 
-	private Config m = new Config("", "messages");
+	private final Config m = new Config("", "messages");
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {

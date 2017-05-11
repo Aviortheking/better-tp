@@ -1,7 +1,6 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
 import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
-import net.DeltaWings.Minecraft.BetterTP.Main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Home implements CommandExecutor {
-	private Config m = new Config("", "messages");
+	private final Config m = new Config("", "messages");
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {

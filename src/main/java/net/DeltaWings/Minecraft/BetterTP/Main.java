@@ -4,8 +4,6 @@ import net.DeltaWings.Minecraft.BetterTP.Commands.*;
 import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;

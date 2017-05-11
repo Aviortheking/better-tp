@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class Sethome implements CommandExecutor {
 
-	private Config m = new Config("", "messages");
-	private Config mc = new Config("", "config");
+	private final Config m = new Config("", "messages");
+	private final Config mc = new Config("", "config");
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
