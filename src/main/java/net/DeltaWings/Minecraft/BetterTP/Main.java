@@ -8,23 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
 	public void log(String Message) {
 		Bukkit.getLogger().log(Level.INFO, Message);
-	}
-
-	public void tp(String[] Type, Player Player) {
-		if(Type[0].equals("spawn") || Type[0].equals("lobby")) {
-			Config c = new Config("data/"+Type[0], "config");
-			 Player.teleport(new Location(Bukkit.getServer().getWorld(c.getString("world")), c.getDouble("x"), c.getDouble("y"), c.getDouble("z")));
-		} else {
-			Config c = new Config("data", Player.getName());
-			String t = Type[1] + ".";
-			Player.teleport(new Location(Bukkit.getServer().getWorld(c.getString(t+"world")), c.getDouble(t+"x"), c.getDouble(t+"y"), c.getDouble(t+"z")));
-		}
 	}
 
 	private static Main instance;
@@ -43,7 +33,13 @@ public final class Main extends JavaPlugin {
 		getCommand("Delhome").setExecutor(new Delhome());
 		getCommand("Homelist").setExecutor(new Homelist());
 
-		config();
+		try {
+			config();
+		} catch ( IOException e ) {
+			e.printStackTrace();
+			log("Shutting Down for security...");
+			this.getPluginLoader().disablePlugin(this);
+		}
 
 		log("Plugin Loaded !");
 	}
@@ -53,7 +49,7 @@ public final class Main extends JavaPlugin {
 		log("Plugin Unloaded !");
 	}
 
-	private void config() {
+	private void config() throws IOException {
 		Config messages = new Config("", "messages");
 		if(!messages.exist()) {
 			messages.create();
@@ -73,15 +69,18 @@ public final class Main extends JavaPlugin {
 			messages.set("home.dont-exist", "&8 >&c Your home [home] do not exist");
 			messages.set("home.teleported", "&8 >&c You have been teleported to your home  : [home]");
 			messages.set("home.max", "&8 >&c You already have [max] homes");
-			messages.set("help.top", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2BetterTP &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
-			messages.set("help.bottom", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2BetterTP &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
+			messages.set("help.top", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2[help] &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
+			messages.set("help.bottom", "&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c= &2[help] &c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-&c=&4-");
 			messages.save();
 		}
 
 		Config c = new Config("", "config");
 		if(!c.exist()) {
 			c.create();
-			c.set("maxhomes");
+			c.header("How to config : https://bitbucket.org/delta-wings/bettertp/wiki/");
+			c.set("maxhomes.default", 1);
+			c.set("spawn.work", "world");
+			c.set("spawn.server.lobby", false);
 			c.save();
 		}
 	}

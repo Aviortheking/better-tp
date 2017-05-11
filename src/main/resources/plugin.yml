@@ -12,6 +12,7 @@ commands:
   lobby:
     description: Teleport to the lobby
     usage: Usage /lobby
+    aliases: [hub]
   bettertp:
     description: Manage the plugin
     usage: Usage /bettertp help

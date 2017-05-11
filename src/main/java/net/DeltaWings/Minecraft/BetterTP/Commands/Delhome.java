@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+
 public class Delhome implements CommandExecutor {
 
 	private Config m = new Config("", "messages");
@@ -18,7 +20,12 @@ public class Delhome implements CommandExecutor {
 			if(a.length == 1) {
 				if(c.isSet(a[0])) {
 					c.set(a[0], null);
-					c.save();
+					try {
+						c.save();
+					} catch ( IOException e ) {
+						e.printStackTrace();
+						s.sendMessage("Error, Please call an Admin !");
+					}
 					s.sendMessage(m.getString("home.deleted").replace("[home]", a[0]).replace("&", "§"));
 					return true;
 				} else {
@@ -28,7 +35,12 @@ public class Delhome implements CommandExecutor {
 			} else if(a.length == 0) {
 				if(c.isSet("home")) {
 					c.set("home", null);
-					c.save();
+					try {
+						c.save();
+					} catch ( IOException e ) {
+						e.printStackTrace();
+						s.sendMessage("Error, Please call an Admin !");
+					}
 					s.sendMessage(m.getString("home.deleted").replace("[home]", "home").replace("&", "§"));
 					return true;
 				} else {
@@ -40,7 +52,7 @@ public class Delhome implements CommandExecutor {
 			s.sendMessage(m.getString("global.permission").replace("&", "§"));
 			return true;
 		} else {
-			s.sendMessage("global.not-console");
+			s.sendMessage(m.getString("global.not-console"));
 			return true;
 		}
 		return false;

@@ -15,7 +15,6 @@ public class Config {
 	private final File root = Main.getInstance().getDataFolder();
 	private final File folder;
 	private final File file;
-	private final FileManager fm = new FileManager();
 
 	public Config(String folder, String file) {
 		this.folder = new File(folder);
@@ -71,12 +70,8 @@ public class Config {
 		return config.getLong(path, def);
 	}
 
-	public void save() {
-		try {
-			config.save(file);
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
+	public void save() throws IOException {
+		config.save(file);
 	}
 
 	public ArrayList<String> getSection(String path) {
@@ -87,16 +82,12 @@ public class Config {
 		return config.getStringList(path);
 	}
 
-	public void create() {
+	public void create() throws IOException {
 		if(!exist()) {
 			if(!root.exists()) root.mkdirs();
 			File rfolder = new File(root.toString() + File.separator + folder.toString());
 			if(!rfolder.exists()) rfolder.mkdirs();
-			try {
-				file.createNewFile();
-			} catch ( IOException e ) {
-				e.printStackTrace();
-			}
+			file.createNewFile();
 		}
 	}
 
@@ -113,6 +104,6 @@ public class Config {
 	}
 
 	public void delete() {
-		fm.delete(file);
+		file.delete();
 	}
 }

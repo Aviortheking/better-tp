@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sethome implements CommandExecutor {
@@ -28,26 +29,41 @@ public class Sethome implements CommandExecutor {
 				if(c.getSection("").size() == mc.getInt("maxhomes." + e)) p = true;
 			}
 			if(p) {
-				s.sendMessage(m.getString("home.max").replace("[max]", c.getSection("").size() + ""));
+				s.sendMessage(m.getString("home.max").replace("[max]", c.getSection("").size() + "").replace("&", "§"));
+				return true;
 			} else {
+				if(!c.exist()) try {
+					c.create();
+				} catch ( IOException e ) {
+					e.printStackTrace();
+					s.sendMessage("Error, Please call an Admin !");
+				}
 				if(a.length == 0) {
-					if(!c.exist()) c.create();
 					Location l = ((Player) s).getLocation();
 					c.set("home.world", l.getWorld().getName());
 					c.set("home.x", l.getX());
 					c.set("home.y", l.getY());
 					c.set("home.z", l.getZ());
-					c.save();
+					try {
+						c.save();
+					} catch ( IOException e ) {
+						e.printStackTrace();
+						s.sendMessage("Error, Please call an Admin !");
+					}
 					s.sendMessage(m.getString("home.set").replace("[home]", "home").replace("&", "§"));
 					return true;
 				} else if(a.length == 1) {
-					if(!c.exist()) c.create();
 					Location l = ((Player) s).getLocation();
 					c.set(a[0] + ".world", l.getWorld().getName());
 					c.set(a[0] + ".x", l.getX());
 					c.set(a[0] + ".y", l.getY());
 					c.set(a[0] + ".z", l.getZ());
-					c.save();
+					try {
+						c.save();
+					} catch ( IOException e ) {
+						e.printStackTrace();
+						s.sendMessage("Error, Please call an Admin !");
+					}
 					s.sendMessage(m.getString("home.set").replace("[home]", a[0]).replace("&", "§"));
 					return true;
 				}
