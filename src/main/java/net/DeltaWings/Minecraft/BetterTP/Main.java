@@ -31,6 +31,7 @@ public final class Main extends JavaPlugin {
 		getCommand("Delhome").setExecutor(new Delhome());
 		getCommand("Homelist").setExecutor(new Homelist());
 
+		new Metrics(this);
 		try {
 			config();
 		} catch ( IOException e ) {
