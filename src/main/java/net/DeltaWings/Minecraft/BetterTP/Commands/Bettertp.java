@@ -93,6 +93,8 @@ public class Bettertp implements CommandExecutor {
 		} else if(s instanceof Player){
 			s.sendMessage(m.getString("global.permission").replace("&", "§"));
 			return true;
+		} else {
+			s.sendMessage(m.getString("global.not-console"));
 		}
 		return false;
 	}

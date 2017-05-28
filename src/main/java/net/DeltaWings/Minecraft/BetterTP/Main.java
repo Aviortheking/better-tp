@@ -3,7 +3,9 @@ package net.DeltaWings.Minecraft.BetterTP;
 import net.DeltaWings.Minecraft.BetterTP.Commands.*;
 import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
 
+import net.DeltaWings.Minecraft.BetterTP.TabCompleter.*;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -11,7 +13,7 @@ import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
-	public void log(String Message) {
+	public static void log(String Message) {
 		Bukkit.getLogger().log(Level.INFO, Message);
 	}
 
@@ -20,13 +22,19 @@ public final class Main extends JavaPlugin {
 		return instance;
 	}
 
+	public static void debug(String message) {
+		if(new Config("", "config").getBoolean("debug", false)) Main.getInstance().getLogger().info("[Debug] " + message);
+	}
+
 	@Override
 	public void onEnable() {
 		instance = this;
 		getCommand("Spawn").setExecutor(new Spawn());
 		getCommand("Lobby").setExecutor(new Lobby());
 		getCommand("Home").setExecutor(new Home());
-		getCommand("Bettertp").setExecutor(new Bettertp());
+		PluginCommand bettertp = getCommand("Bettertp");
+		bettertp.setExecutor(new Bettertp());
+		bettertp.setTabCompleter(new BettertpTab());
 		getCommand("Sethome").setExecutor(new Sethome());
 		getCommand("Delhome").setExecutor(new Delhome());
 		getCommand("Homelist").setExecutor(new Homelist());
@@ -77,9 +85,11 @@ public final class Main extends JavaPlugin {
 		if(!c.exist()) {
 			c.create();
 			c.header("How to config : https://bitbucket.org/delta-wings/bettertp/wiki/");
+			c.set("debug", false);
 			c.set("maxhomes.default", 1);
 			c.set("spawn.work", "world");
 			c.set("spawn.server.lobby", false);
+			//new String[]{"debug","maxhomes.default","spawn.work","spawn.server.lobby"};
 			c.save();
 		}
 	}
