@@ -1,11 +1,11 @@
 package net.DeltaWings.Minecraft.BetterTP;
 
 import net.DeltaWings.Minecraft.BetterTP.Commands.*;
-import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
+import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
 import net.DeltaWings.Minecraft.BetterTP.TabCompleter.*;
-import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -13,47 +13,69 @@ import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
-	public static void log(String Message) {
-		Bukkit.getLogger().log(Level.INFO, Message);
-	}
-
 	private static Main instance;
 	public static Main getInstance() {
 		return instance;
 	}
 
+	public static void log(String message) {
+		getInstance().getLogger().log(Level.INFO, message);
+	}
+
 	public static void debug(String message) {
-		if(new Config("", "config").getBoolean("debug", false)) Main.getInstance().getLogger().info("[Debug] " + message);
+		if(new Config("", "config").getBoolean("debug", true)) getInstance().getLogger().log(Level.INFO, "[Debug] > " + message);
+	}
+
+	public static void error(String message) {
+		getInstance().getLogger().log(Level.WARNING, message);
 	}
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		getCommand("Spawn").setExecutor(new Spawn());
-		getCommand("Lobby").setExecutor(new Lobby());
-		getCommand("Home").setExecutor(new Home());
+		debug("Loading Variables");
+		PluginManager pm = getServer().getPluginManager();
 		PluginCommand bettertp = getCommand("Bettertp");
-		bettertp.setExecutor(new Bettertp());
-		bettertp.setTabCompleter(new BettertpTab());
-		getCommand("Sethome").setExecutor(new Sethome());
-		getCommand("Delhome").setExecutor(new Delhome());
-		getCommand("Homelist").setExecutor(new Homelist());
+		debug("Loaded variables");
 
-		new Metrics(this);
+		debug("Loading Configuration");
 		try {
 			config();
 		} catch ( IOException e ) {
 			e.printStackTrace();
-			log("Shutting Down for security...");
+			error("Error Config not generated");
+			error("Shutting Down for security...");
 			this.getPluginLoader().disablePlugin(this);
 		}
+		debug("Loaded Configuration !");
 
-		log("Plugin Loaded !");
+		debug("Loading Events");
+		//pm.registerEvents(new Event(), this);
+		debug("Loaded Events");
+
+		debug("Loading Commands");
+		//getCommand("Command").setExecutor(new Command());
+		bettertp.setExecutor(new Bettertp());
+		bettertp.setTabCompleter(new BettertpTab());
+		getCommand("Spawn").setExecutor(new Spawn());
+		getCommand("Lobby").setExecutor(new Lobby());
+		getCommand("Home").setExecutor(new Home());
+		getCommand("Sethome").setExecutor(new Sethome());
+		getCommand("Delhome").setExecutor(new Delhome());
+		getCommand("Homelist").setExecutor(new Homelist());
+
+		debug("Loaded Commands");
+
+		debug("Enabling Metrics");
+		//new Metrics(this);
+		log("Metrics Started : https://bstats.org/plugin/bukkit/plugin/");
+
+		log("Loaded !");
 	}
 
 	@Override
 	public void onDisable() {
-		log("Plugin Unloaded !");
+		log("Unloaded !");
 	}
 
 	private void config() throws IOException {

@@ -1,6 +1,6 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
-import net.DeltaWings.Minecraft.BetterTP.Custom.Config;
+import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;

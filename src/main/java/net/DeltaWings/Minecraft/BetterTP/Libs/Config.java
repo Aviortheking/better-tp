@@ -1,4 +1,4 @@
-package net.DeltaWings.Minecraft.BetterTP.Custom;
+package net.DeltaWings.Minecraft.BetterTP.Libs;
 
 import net.DeltaWings.Minecraft.BetterTP.Main;
 
