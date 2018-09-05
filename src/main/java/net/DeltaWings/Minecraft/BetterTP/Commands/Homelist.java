@@ -1,6 +1,7 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
 import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +14,7 @@ public class Homelist implements CommandExecutor {
 		if(s instanceof Player) {
 			Config c = new Config("", "messages");
 			s.sendMessage(c.getString("help.top").replace("[help]", "Homelist").replace("&", "§"));
-			for(String a : new Config("data", s.getName()).getSection("")) {
+			for(String a : API.homelist(s.getName())) {
 				s.sendMessage(("&4| &9").replace("&", "§") + a);
 			}
 			s.sendMessage(c.getString("help.bottom").replace("[help]", "Homelist").replace("&", "§"));

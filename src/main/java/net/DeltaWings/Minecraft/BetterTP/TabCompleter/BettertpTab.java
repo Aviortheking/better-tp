@@ -1,6 +1,9 @@
 package net.DeltaWings.Minecraft.BetterTP.TabCompleter;
 
 import net.DeltaWings.Minecraft.BetterTP.Main;
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
+import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -11,7 +14,7 @@ import java.util.List;
 
 public class BettertpTab implements TabCompleter {
 
-	private final String[] menu = new String[]{"set", "del", "delete", "help", "config"}, setdel = new String[]{"spawn","lobby"}, confopt = new String[]{""};
+	private final String[] menu = new String[]{"set", "del", "delete", "help", "home", "delhome"}, setdel = new String[]{"spawn","lobby"}, confopt = new String[]{""};
 
 	@Override
 	public List<String> onTabComplete(CommandSender s, Command c, String unused, String[] a) {
@@ -36,6 +39,10 @@ public class BettertpTab implements TabCompleter {
 				for (String t : y) if (t.startsWith(a[1].toLowerCase())) l.add(t);
 				return l;
 			} else return Arrays.asList(y);
+		} else if(a.length == 3) {
+			if(a[0].equalsIgnoreCase("home") || a[0].equalsIgnoreCase("delhome")) {
+				return API.homelist(a[1]);
+			}
 		}
 		return null;
 	}
