@@ -53,3 +53,5 @@ public class Home implements CommandExecutor {
 		return false;
 	}
 }
+
+// /home [home]

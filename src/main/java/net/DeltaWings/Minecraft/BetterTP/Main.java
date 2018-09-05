@@ -8,6 +8,8 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import org.bstats.bukkit.Metrics;
+
 import java.io.IOException;
 import java.util.logging.Level;
 
@@ -36,6 +38,8 @@ public final class Main extends JavaPlugin {
 		debug("Loading Variables");
 		PluginManager pm = getServer().getPluginManager();
 		PluginCommand bettertp = getCommand("Bettertp");
+		PluginCommand home = getCommand("Home");
+		PluginCommand delhome = getCommand("Delhome");
 		debug("Loaded variables");
 
 		debug("Loading Configuration");
@@ -59,15 +63,17 @@ public final class Main extends JavaPlugin {
 		bettertp.setTabCompleter(new BettertpTab());
 		getCommand("Spawn").setExecutor(new Spawn());
 		getCommand("Lobby").setExecutor(new Lobby());
-		getCommand("Home").setExecutor(new Home());
+		home.setExecutor(new Home());
+		home.setTabCompleter(new HomeTab());
 		getCommand("Sethome").setExecutor(new Sethome());
-		getCommand("Delhome").setExecutor(new Delhome());
+		delhome.setExecutor(new Delhome());
+		delhome.setTabCompleter(new DelhomeTab());
 		getCommand("Homelist").setExecutor(new Homelist());
 
 		debug("Loaded Commands");
 
 		debug("Enabling Metrics");
-		//new Metrics(this);
+		new Charts(new Metrics(this));
 		log("Metrics Started : https://bstats.org/plugin/bukkit/plugin/");
 
 		log("Loaded !");

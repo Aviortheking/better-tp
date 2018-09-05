@@ -1,7 +1,9 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
 import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,13 +14,23 @@ import java.io.IOException;
 
 public class Bettertp implements CommandExecutor {
 
+	Config m = new Config("", "messages");
+
 	@Override
 	public boolean onCommand(CommandSender s, Command unu2, String unu1, String[] a) {
-		Config m = new Config("", "messages");
+		
 		Config g = new Config("", "config");
 		if(s instanceof Player && s.hasPermission("bettertp.admin")) {
 			Player p = (Player) s;
-			if(a.length == 2) {
+			if((a.length == 2 || a.length == 3) && a[0].equalsIgnoreCase("home")) {
+				if(a.length == 2) home(s, a[1], "home");
+				else home(s, a[1], a[2]);
+			} else if((a.length == 2 || a.length == 3) && a[0].equalsIgnoreCase("delhome")) {
+				if(a.length == 2) delhome(s, a[1], "home");
+				else delhome(s, a[1], a[2]);
+			} else if(a.length == 2 && a[0].equalsIgnoreCase("homelist")) {
+				homelist(s, a[1]);
+			} else if(a.length == 2) {
 				if(a[0].equalsIgnoreCase("set")) {
 					if(a[1].equalsIgnoreCase("spawn")) {
 						Config c = null;
@@ -98,4 +110,51 @@ public class Bettertp implements CommandExecutor {
 		}
 		return false;
 	}
+
+
+
+
+
+	private void set() {
+	
+	}
+	
+	private void help() {
+	
+	}
+	
+	private void home(CommandSender s, String player, String home) {
+		Config cp = new Config("data", player);
+		if(cp.exist()) {
+			String t = home+".";
+			((Player) s).teleport(new Location(Bukkit.getServer().getWorld(cp.getString(t+"world")), cp.getDouble(t+"x"), cp.getDouble(t+"y"), cp.getDouble(t+"z")));
+		}
+		((Player) s).sendMessage("Sended you to " + player + " home : " + home);
+	}
+
+	private void delhome(CommandSender s, String player, String home) {
+		Config cp = new Config("data", player);
+		if(cp.exist() && cp.isSet(home)) {
+			cp.set(home, null);
+			try {
+				cp.save();
+			} catch ( IOException e ) {
+				e.printStackTrace();
+				s.sendMessage("Error, Please call an Admin !");
+			}
+			s.sendMessage(m.getString("home.deleted").replace("[home]", home).replace("&", "§"));
+		}
+	}
+
+	private void homelist(CommandSender s, String player) {
+		Config c = new Config("", "messages");
+		s.sendMessage(c.getString("help.top").replace("[help]", "Homelist").replace("&", "§"));
+		for(String a : API.homelist(s.getName())) {
+			s.sendMessage(("&4| &9").replace("&", "§") + a);
+		}
+		s.sendMessage(c.getString("help.bottom").replace("[help]", "Homelist").replace("&", "§"));
+
+	}
 }
+
+
