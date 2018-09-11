@@ -1,15 +1,16 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
 import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Sethome implements CommandExecutor {
 
@@ -19,62 +20,45 @@ public class Sethome implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
 		if(s instanceof Player && s.hasPermission("bettertp.sethome")) {
-			Config c = new Config("data", s.getName());
-			ArrayList<String> r = new ArrayList<>();
+			if(a.length > 2) return false; //too many arguments
+			Config c = new Config(API.getPlayersFolder(), s.getName());
+			Integer maxhomes = -1;
 			for(String e : mc.getSection("maxhomes")) {
-				if(s.hasPermission("bettertp.max."+e)) r.add(e);
+				if(s.hasPermission("bettertp.max."+e)) {
+					Integer max = mc.getInt("maxhomes."+e, 0);
+					maxhomes = max > maxhomes ? max : maxhomes; //if max > maxhome then maxhome = max
+				}
 			}
-			Boolean p = false;
-			for(String e : r) {
-				if(c.getSection("").size() == mc.getInt("maxhomes." + e)) p = true;
-			}
-			if(p) {
+			if(c.getSection("").size() >= maxhomes) { //Player already have max number of home
 				s.sendMessage(m.getString("home.max").replace("[max]", c.getSection("").size() + "").replace("&", "§"));
 				return true;
-			} else {
-				if(!c.exist()) try {
-					c.create();
+			} else { //player can have more homes
+				try {
+					if(!c.exist()) c.create();
+					String homename = a.length == 0 ? "home" : a[0];
+					if(c.isSet(homename)) {
+						//sendmessage home already set please delete it before (/delhome)
+					} else {
+						Location l = ((Player) s).getLocation();
+						c.set(homename+".world", l.getWorld().getName());
+						c.set(homename+".x", l.getX());
+						c.set(homename+".y", l.getY());
+						c.set(homename+".z", l.getZ());
+						c.save();
+						//sendmessage home set
+					}
 				} catch ( IOException e ) {
 					e.printStackTrace();
 					s.sendMessage("Error, Please call an Admin !");
 				}
-				if(a.length == 0) {
-					Location l = ((Player) s).getLocation();
-					c.set("home.world", l.getWorld().getName());
-					c.set("home.x", l.getX());
-					c.set("home.y", l.getY());
-					c.set("home.z", l.getZ());
-					try {
-						c.save();
-					} catch ( IOException e ) {
-						e.printStackTrace();
-						s.sendMessage("Error, Please call an Admin !");
-					}
-					s.sendMessage(m.getString("home.set").replace("[home]", "home").replace("&", "§"));
-					return true;
-				} else if(a.length == 1) {
-					Location l = ((Player) s).getLocation();
-					c.set(a[0] + ".world", l.getWorld().getName());
-					c.set(a[0] + ".x", l.getX());
-					c.set(a[0] + ".y", l.getY());
-					c.set(a[0] + ".z", l.getZ());
-					try {
-						c.save();
-					} catch ( IOException e ) {
-						e.printStackTrace();
-						s.sendMessage("Error, Please call an Admin !");
-					}
-					s.sendMessage(m.getString("home.set").replace("[home]", a[0]).replace("&", "§"));
-					return true;
-				}
+				return true;
 			}
-		} else if(s instanceof Player && !s.hasPermission("bettertp.sethome")) {
-			s.sendMessage(m.getString("global.permission").replace("&", "§"));
+		} else if(s instanceof ConsoleCommandSender) {
+			//sendmessage can't be used as the console
 			return true;
 		} else {
-			s.sendMessage(m.getString("global.not-console"));
+			//sendmessage don't have the permission
 			return true;
 		}
-		return false;
 	}
 }

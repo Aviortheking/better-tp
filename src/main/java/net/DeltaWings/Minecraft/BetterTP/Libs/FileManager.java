@@ -6,23 +6,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class FileManager {
 
 
-	public static List<String> listFiles(String path) {
+	public static ArrayList<String> listFiles(String path) {
 		String[] t = new File(path).list();
 		if(t == null) return new ArrayList<>();
-		else return Arrays.asList(t);
+		else return new ArrayList<String>(Arrays.asList(t));
 	}
 
-	public static List<String> listFiles(File path) {
+	public static ArrayList<String> listFiles(File path) {
 		String[] t = path.list();
 		if(t == null) return new ArrayList<>();
-		else return Arrays.asList(t);
+		else return new ArrayList<String>(Arrays.asList(t));
 	}
 
 	public static void delete(File path) {
