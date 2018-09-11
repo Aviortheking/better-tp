@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeTab implements TabCompleter {
@@ -13,7 +14,16 @@ public class HomeTab implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender s, Command u1, String unused, String[] a) {
 		if( a.length == 1) {
-			return API.homelist(s.getName());
+			if(a[0] == "") {
+				return API.homelist(s.getName());
+			} else {
+				ArrayList<String> t = new ArrayList<>();
+				for (String home : API.homelist(s.getName())) {
+					if(home.startsWith(a[0].toLowerCase())) t.add(home);
+				}
+				return t;
+			}
+			
 		} else return null;
 	}
 }

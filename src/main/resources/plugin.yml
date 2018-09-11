@@ -6,13 +6,10 @@ authors: [Aviortheking, LePhoenixArdent, Aipsyllone]
 description: The best teleportation plugin
 website: https://delta-wings.net
 commands:
-  spawn:
-    description: Teleport to the spawn
-    usage: Usage /spawn
   lobby:
-    description: Teleport to the lobby
-    usage: Usage /lobby
-    aliases: [hub]
+    description: Teleport to the <command>
+    usage: Usage /<command>
+    aliases: [hub,spawn]
   bettertp:
     description: Manage the plugin
     usage: Usage /bettertp help

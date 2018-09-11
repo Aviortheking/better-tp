@@ -1,13 +1,13 @@
 package net.DeltaWings.Minecraft.BetterTP.Commands;
 
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
 import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.IOException;
 
 public class Delhome implements CommandExecutor {
 
@@ -16,45 +16,30 @@ public class Delhome implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
 		if(s instanceof Player && s.hasPermission("bettertp.delhome")) {
-			Config c = new Config("data", s.getName());
-			if(a.length == 1) {
-				if(c.isSet(a[0])) {
-					c.set(a[0], null);
-					try {
-						c.save();
-					} catch ( IOException e ) {
-						e.printStackTrace();
-						s.sendMessage("Error, Please call an Admin !");
-					}
-					s.sendMessage(m.getString("home.deleted").replace("[home]", a[0]).replace("&", "§"));
-					return true;
+			if(a.length > 2) return false; //too many arguments
+			Config c = new Config(API.getPlayersFolder(), s.getName());
+			String homename = a.length == 0 ? "home" : a[0];
+			try {
+				if(c.exist() && c.isSet(homename)) {
+					c.set(homename, null);
+					if(c.getSection("").size() == 0) {
+						c.delete();
+					} else c.save();
+					//sendmessage home deleted
 				} else {
-					s.sendMessage(m.getString("home.dont-exist").replace("[home]", a[0]).replace("&", "§"));
-					return true;
+					//sendmessage home don't exist
 				}
-			} else if(a.length == 0) {
-				if(c.isSet("home")) {
-					c.set("home", null);
-					try {
-						c.save();
-					} catch ( IOException e ) {
-						e.printStackTrace();
-						s.sendMessage("Error, Please call an Admin !");
-					}
-					s.sendMessage(m.getString("home.deleted").replace("[home]", "home").replace("&", "§"));
-					return true;
-				} else {
-					s.sendMessage(m.getString("home.dont-exist").replace("[home]", "home").replace("&", "§"));
-					return true;
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				//sendmessage error happened
 			}
-		} else if(s instanceof Player && !s.hasPermission("bettertp.delhome")) {
-			s.sendMessage(m.getString("global.permission").replace("&", "§"));
+			return true;
+		} else if(s instanceof ConsoleCommandSender) {
+			//sendmessage console can't use this command
 			return true;
 		} else {
-			s.sendMessage(m.getString("global.not-console"));
+			//sendmessage missing permission
 			return true;
 		}
-		return false;
 	}
 }

@@ -1,19 +1,24 @@
 package net.DeltaWings.Minecraft.BetterTP;
 
+import net.DeltaWings.Minecraft.BetterTP.Api.API;
 import net.DeltaWings.Minecraft.BetterTP.Commands.*;
 import net.DeltaWings.Minecraft.BetterTP.Libs.Config;
 
 import net.DeltaWings.Minecraft.BetterTP.TabCompleter.*;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bstats.bukkit.Metrics;
 
 import java.io.IOException;
 import java.util.logging.Level;
+import java.util.concurrent.Callable;
+
 
 public final class Main extends JavaPlugin {
+
+	private PluginDescriptionFile desc;
 
 	private static Main instance;
 	public static Main getInstance() {
@@ -36,7 +41,8 @@ public final class Main extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		debug("Loading Variables");
-		PluginManager pm = getServer().getPluginManager();
+		desc = this.getDescription();
+		//PluginManager pm = getServer().getPluginManager();
 		PluginCommand bettertp = getCommand("Bettertp");
 		PluginCommand home = getCommand("Home");
 		PluginCommand delhome = getCommand("Delhome");
@@ -53,16 +59,16 @@ public final class Main extends JavaPlugin {
 		}
 		debug("Loaded Configuration !");
 
-		debug("Loading Events");
+		//debug("Loading Events");
 		//pm.registerEvents(new Event(), this);
-		debug("Loaded Events");
+		//debug("Loaded Events");
 
 		debug("Loading Commands");
+
 		//getCommand("Command").setExecutor(new Command());
 		bettertp.setExecutor(new Bettertp());
 		bettertp.setTabCompleter(new BettertpTab());
-		getCommand("Spawn").setExecutor(new Spawn());
-		getCommand("Lobby").setExecutor(new Lobby());
+		getCommand("Lobby").setExecutor(new LobbySpawn());
 		home.setExecutor(new Home());
 		home.setTabCompleter(new HomeTab());
 		getCommand("Sethome").setExecutor(new Sethome());
@@ -72,9 +78,11 @@ public final class Main extends JavaPlugin {
 
 		debug("Loaded Commands");
 
-		debug("Enabling Metrics");
-		new Charts(new Metrics(this));
-		log("Metrics Started : https://bstats.org/plugin/bukkit/plugin/");
+		if(new Config("", "config").getBoolean("metrics", true)) {
+			debug("Enabling Metrics");
+			loadCharts(new Metrics(this));
+			log("Metrics Started : https://bstats.org/plugin/bukkit/"+desc.getName()+"/");
+		}
 
 		log("Loaded !");
 	}
@@ -114,11 +122,32 @@ public final class Main extends JavaPlugin {
 			c.create();
 			c.header("How to config : https://bitbucket.org/delta-wings/bettertp/wiki/");
 			c.set("debug", false);
+			c.set("metrics", true);
+			c.set("donttouch.version", 1);
 			c.set("maxhomes.default", 1);
 			c.set("spawn.work", "world");
 			c.set("spawn.server.lobby", false);
 			//new String[]{"debug","maxhomes.default","spawn.work","spawn.server.lobby"};
 			c.save();
 		}
+	}
+
+
+	private void loadCharts(Metrics metrics) {
+		Main.debug("loading custom charts");
+		metrics.addCustomChart(new Metrics.SingleLineChart("home_number", new Callable<Integer>(){
+		
+			@Override
+			public Integer call() throws Exception {
+				Integer result = 0;
+				for (String conf : API.listPlayersWithHome()) {
+					Config c = new Config(API.getPlayersFolder(), conf);
+					result += c.getSection("").size();
+				}
+				return result;
+			}
+		}));
+		Main.debug("loading custom charts");
+
 	}
 }
