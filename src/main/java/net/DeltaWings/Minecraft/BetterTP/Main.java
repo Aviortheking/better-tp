@@ -9,8 +9,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bstats.bukkit.Metrics;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.concurrent.Callable;
@@ -53,9 +51,10 @@ public final class Main extends JavaPlugin {
 			config();
 		} catch ( IOException e ) {
 			e.printStackTrace();
-			error("Error Config not generated");
+			error("Error: Config not generated");
 			error("Shutting Down for security...");
 			this.getPluginLoader().disablePlugin(this);
+			return
 		}
 		debug("Loaded Configuration !");
 
@@ -77,13 +76,6 @@ public final class Main extends JavaPlugin {
 		getCommand("Homelist").setExecutor(new Homelist());
 
 		debug("Loaded Commands");
-
-		if(new Config("", "config").getBoolean("metrics", true)) {
-			debug("Enabling Metrics");
-			loadCharts(new Metrics(this));
-			log("Metrics Started : https://bstats.org/plugin/bukkit/"+desc.getName()+"/");
-		}
-
 		log("Loaded !");
 	}
 
@@ -130,24 +122,5 @@ public final class Main extends JavaPlugin {
 			//new String[]{"debug","maxhomes.default","spawn.work","spawn.server.lobby"};
 			c.save();
 		}
-	}
-
-
-	private void loadCharts(Metrics metrics) {
-		Main.debug("loading custom charts");
-		metrics.addCustomChart(new Metrics.SingleLineChart("home_number", new Callable<Integer>(){
-		
-			@Override
-			public Integer call() throws Exception {
-				Integer result = 0;
-				for (String conf : API.listPlayersWithHome()) {
-					Config c = new Config(API.getPlayersFolder(), conf);
-					result += c.getSection("").size();
-				}
-				return result;
-			}
-		}));
-		Main.debug("loading custom charts");
-
 	}
 }

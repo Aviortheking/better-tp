@@ -17,16 +17,18 @@ public class Home implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
-		if(s instanceof Player && s.hasPermission("bettertp.home")) {
+		if(s instanceof Player/* && s.hasPermission("bettertp.home")*/) {
 			if(a.length > 1) return false; //too many arguments
 			Config c = new Config(API.getPlayersFolder(), s.getName());
 			String homename = a.length == 0 ? "home" : a[0];
 			if(c.isSet(homename)) {
 				((Player) s).teleport(new Location(Bukkit.getServer().getWorld(c.getString(homename+".world")), c.getDouble(homename+".x"), c.getDouble(homename+".y"), c.getDouble(homename+".z")));
 				//sendmessage teleported to home home
+				s.sendMessage(m.getString("home.teleported").replace("[home]", homename).replace("&", "§"));
 				return true;
 			} else {
 				//sendmessage home don't exist
+				s.sendMessage(m.getString("home.dont-exist").replace("[home]", homename).replace("&", "§"));
 				return true;
 			}
 		} else if(s instanceof ConsoleCommandSender) {

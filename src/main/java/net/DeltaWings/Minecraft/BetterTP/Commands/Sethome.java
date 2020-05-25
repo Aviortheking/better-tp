@@ -19,12 +19,12 @@ public class Sethome implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
-		if(s instanceof Player && s.hasPermission("bettertp.sethome")) {
+		if(s instanceof Player/* && s.hasPermission("bettertp.sethome")*/) {
 			if(a.length > 2) return false; //too many arguments
 			Config c = new Config(API.getPlayersFolder(), s.getName());
 			Integer maxhomes = -1;
 			for(String e : mc.getSection("maxhomes")) {
-				if(s.hasPermission("bettertp.max."+e)) {
+				if(true || s.hasPermission("bettertp.max."+e)) {
 					Integer max = mc.getInt("maxhomes."+e, 0);
 					maxhomes = max > maxhomes ? max : maxhomes; //if max > maxhome then maxhome = max
 				}
@@ -37,7 +37,7 @@ public class Sethome implements CommandExecutor {
 					if(!c.exist()) c.create();
 					String homename = a.length == 0 ? "home" : a[0];
 					if(c.isSet(homename)) {
-						//sendmessage home already set please delete it before (/delhome)
+						s.sendMessage(m.getString("home.max").replace("[max]", homename).replace("&", "§"));
 					} else {
 						Location l = ((Player) s).getLocation();
 						c.set(homename+".world", l.getWorld().getName());
@@ -45,7 +45,7 @@ public class Sethome implements CommandExecutor {
 						c.set(homename+".y", l.getY());
 						c.set(homename+".z", l.getZ());
 						c.save();
-						//sendmessage home set
+						s.sendMessage(m.getString("home.set").replace("[home]", homename).replace("&", "§"));
 					}
 				} catch ( IOException e ) {
 					e.printStackTrace();
