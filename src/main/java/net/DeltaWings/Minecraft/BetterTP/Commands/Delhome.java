@@ -15,7 +15,7 @@ public class Delhome implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender s, Command command, String label, String[] a) {
-		if(s instanceof Player && s.hasPermission("bettertp.delhome")) {
+		if(s instanceof Player/* && s.hasPermission("bettertp.delhome")*/) {
 			if(a.length > 2) return false; //too many arguments
 			Config c = new Config(API.getPlayersFolder(), s.getName());
 			String homename = a.length == 0 ? "home" : a[0];
@@ -26,8 +26,10 @@ public class Delhome implements CommandExecutor {
 						c.delete();
 					} else c.save();
 					//sendmessage home deleted
+					s.sendMessage(m.getString("home.deleted").replace("[home]", homename).replace("&", "§"));
 				} else {
 					//sendmessage home don't exist
+					s.sendMessage(m.getString("home.dont-exist").replace("[home]", homename).replace("&", "§"));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
